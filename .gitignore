@@ -1,83 +1,23 @@
-# React
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-.DS_STORE
-node_modules
-scripts/flow/*/.flowconfig
-.flowconfig
-*~
-*.pyc
-.grunt
-_SpecRunner.html
-__benchmarks__
-build/
-remote-repo/
-coverage/
-.module-cache
-fixtures/dom/public/react-dom.js
-fixtures/dom/public/react.js
-test/the-files-to-test.generated.js
-*.log*
-chrome-user-data
-*.sublime-project
-*.sublime-workspace
-.idea
-*.iml
-.vscode
-*.swp
-*.swo
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
 
-packages/react-devtools-core/dist
-packages/react-devtools-extensions/chrome/build
-packages/react-devtools-extensions/chrome/*.crx
-packages/react-devtools-extensions/chrome/*.pem
-packages/react-devtools-extensions/firefox/build
-packages/react-devtools-extensions/firefox/*.xpi
-packages/react-devtools-extensions/firefox/*.pem
-packages/react-devtools-extensions/shared/build
-packages/react-devtools-extensions/.tempUserDataDir
-packages/react-devtools-inline/dist
-packages/react-devtools-shell/dist
-packages/react-devtools-timeline/dist
+# testing
+/coverage
 
-# TypeScript
-lib-cov
-*.seed
-*.log
-*.csv
-*.dat
-*.out
-*.pid
-*.gz
-*.swp
+# production
+/build
 
-pids
-logs
-results
-tmp
-
-# Build
-public/css/main.css
-
-# Coverage reports
-coverage
-
-# API keys and secrets
-.env
-
-# Dependency directory
-node_modules
-bower_components
-
-# Editors
-.idea
-*.iml
-
-# OS metadata
+# misc
 .DS_Store
-Thumbs.db
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# Ignore built ts files
-dist/**/*
-
-# ignore yarn.lock
-yarn.lock
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
