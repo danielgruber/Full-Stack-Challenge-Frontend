@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Alert, Button, Col, Container, Form, Row } from 'react-bootstrap';
 import {
     Routes,
@@ -10,6 +10,7 @@ import {
     Outlet
   } from "react-router-dom";
 import commerceAPI from '../../api/commerceAPI';
+import { useIsLoggedIn } from '../../api/loginEffect';
 import UserRole from '../../model/UserRole';
 
 function Login() {
@@ -21,6 +22,13 @@ function Login() {
     const [loading, setLoading] = React.useState(false);
     const [error, setError] = React.useState("");
     const navigate = useNavigate();
+    const isLoggedIn = useIsLoggedIn();
+
+    useEffect(() => {
+        if (isLoggedIn) {
+            navigate("/vending")
+        }
+    }, [isLoggedIn]);
 
     const submitForm = (forceLogin: boolean = false) => {
         if (showRegister == false || forceLogin) {

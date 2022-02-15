@@ -14,13 +14,13 @@ import './App.css';
 import Login from '../Login/Login';
 import VendingMachine from '../VendingMachine/VendingMachine';
 import commerceAPI from '../../api/commerceAPI';
+import { useIsLoggedIn } from '../../api/loginEffect';
 
 function RequireAuth({ children }: { children: JSX.Element }) {
-  let auth = commerceAPI.currentToken != null;
-  let location = useLocation();
+  const isLoggedIn = useIsLoggedIn();
+  const location = useLocation();
 
-  if (!auth) {
-    console.log("No Auth, yet.")
+  if (!isLoggedIn) {
     // Redirect them to the /login page, but save the current location they were
     // trying to go to when they were redirected. This allows us to send them
     // along to that page after they login, which is a nicer user experience
@@ -32,7 +32,8 @@ function RequireAuth({ children }: { children: JSX.Element }) {
 }
 
 function App() {
-  let location = useLocation();
+  const isLoggedIn = useIsLoggedIn();
+  const location = useLocation()
 
   return (
     <div className="App">
@@ -46,11 +47,17 @@ function App() {
               <Nav.Link href="/vending">Vending Machine</Nav.Link>
             </Nav>
           </Navbar.Collapse>
+          <Nav.Item hidden={!isLoggedIn} className="ml-auto">
+            
+          </Nav.Item>
+          <Nav.Item hidden={!isLoggedIn} className="ml-auto">
+            <Nav.Link onClick={() => commerceAPI.logout()}>Logout</Nav.Link>
+          </Nav.Item>
         </Container>
       </Navbar>
       <div className="Body">
         <Routes>
-          <Route path="/" element={<Navigate to="/login" state={{ from: location }} replace />} />
+          <Route path="/" element={<Navigate to="/vending" state={{ from: location }} replace />} />
           <Route path="/login" element={<Login />} />
           <Route
             path="/vending"
@@ -63,7 +70,7 @@ function App() {
         </Routes>
       </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
