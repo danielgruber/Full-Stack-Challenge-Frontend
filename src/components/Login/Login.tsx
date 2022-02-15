@@ -1,19 +1,11 @@
 import React, { useEffect } from 'react';
 import { Alert, Button, Col, Container, Form, Row } from 'react-bootstrap';
-import {
-    Routes,
-    Route,
-    Link,
-    useNavigate,
-    useLocation,
-    Navigate,
-    Outlet
-  } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import commerceAPI from '../../api/commerceAPI';
-import { useIsLoggedIn } from '../../api/loginEffect';
+import User from '../../model/User';
 import UserRole from '../../model/UserRole';
 
-function Login() {
+function Login({ user }: { user: User|null }) {
     const [showRegister, setShowRegister] = React.useState(false);
     const [username, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
@@ -22,15 +14,14 @@ function Login() {
     const [loading, setLoading] = React.useState(false);
     const [error, setError] = React.useState("");
     const navigate = useNavigate();
-    const isLoggedIn = useIsLoggedIn();
 
     useEffect(() => {
-        if (isLoggedIn) {
+        if (user) {
             navigate("/vending")
         }
 
         return () => {}
-    }, [isLoggedIn]);
+    }, [user]);
 
     const submitForm = (forceLogin: boolean = false) => {
         if (showRegister == false || forceLogin) {
@@ -80,7 +71,7 @@ function Login() {
 
                     <Form.Group className="mb-3" hidden={!showRegister} controlId="formBasicRole">
                         <Form.Label>Role</Form.Label>
-                        <Form.Select disabled={loading} aria-label="Select User Role">
+                        <Form.Select disabled={loading} onChange={e => setRole(e.target.value as UserRole)} aria-label="Select User Role">
                             {roles.map((role: UserRole) => 
                                 <option key={role} value={role}>{role}</option>
                             )};

@@ -15,6 +15,7 @@ const TOKEN_KEY = "ven_mach_token"
 class API {
     currentToken: string | null
     loginChange?: (() => void) = undefined
+    private _user: User | null = null
 
     constructor() {
         this.currentToken = localStorage.getItem(TOKEN_KEY)
@@ -52,9 +53,19 @@ class API {
 
         // check if token is valid
         if (this.currentToken) {
-            this.currentUser().catch(() => this.logout())
+            this.currentUser().then(() => this.loginChange?.apply(this)).catch(() => this.logout())
         }
     }
+
+    public set user(value: User | null) {
+        this._user = value
+        this.loginChange?.apply(this)
+    }
+
+    public get user(): User | null {
+        return this._user
+    }
+
 
     authenticate = (username: string, password: string, signal: AbortSignal|undefined = undefined) => {
         return axios.post<AuthResponse>("/authenticate", {
@@ -66,7 +77,7 @@ class API {
             localStorage.setItem(TOKEN_KEY, response.data.token)
             this.currentToken = response.data.token
 
-            this.loginChange?.apply(this)
+            this.currentUser().then(() => this.loginChange?.apply(this))
         })
     }
 
@@ -83,6 +94,9 @@ class API {
     currentUser = (signal: AbortSignal|undefined = undefined) => {
         return axios.get<User>("/user", {
             signal: signal
+        }).then((response) => {
+            this.user = response.data
+            return response
         })
     }
 
@@ -121,7 +135,7 @@ class API {
     }
 
     buy = (productId: string, productAmount: number, signal: AbortSignal|undefined = undefined) => {
-        return axios.post<BuyResponse>("/deposit", {
+        return axios.post<BuyResponse>("/buy", {
             productId, productAmount
         }, {
             signal: signal
@@ -138,6 +152,7 @@ class API {
         console.log("Logging out")
 
         this.currentToken = null
+        this.user = null
 
         localStorage.removeItem(TOKEN_KEY)
 
