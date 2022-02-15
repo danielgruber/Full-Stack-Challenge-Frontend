@@ -28,6 +28,8 @@ function Login() {
         if (isLoggedIn) {
             navigate("/vending")
         }
+
+        return () => {}
     }, [isLoggedIn]);
 
     const submitForm = (forceLogin: boolean = false) => {
@@ -73,10 +75,10 @@ function Login() {
 
                     <Form.Group className="mb-3" controlId="formBasicPassword">
                         <Form.Label>Password</Form.Label>
-                        <Form.Control disabled={loading} type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" />
+                        <Form.Control autoComplete={showRegister ? "new-password" : "current-password"} disabled={loading} type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" />
                     </Form.Group>
 
-                    <Form.Group className="mb-3" hidden={!showRegister} controlId="formBasicPassword">
+                    <Form.Group className="mb-3" hidden={!showRegister} controlId="formBasicRole">
                         <Form.Label>Role</Form.Label>
                         <Form.Select disabled={loading} aria-label="Select User Role">
                             {roles.map((role: UserRole) => 

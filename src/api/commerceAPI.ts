@@ -1,4 +1,5 @@
 import { AxiosResponse } from "axios"
+import { sign } from "crypto"
 import Product from "../model/Product"
 import User from "../model/User"
 import UserRole from "../model/UserRole"
@@ -55,10 +56,12 @@ class API {
         }
     }
 
-    authenticate = (username: string, password: string) => {
+    authenticate = (username: string, password: string, signal: AbortSignal|undefined = undefined) => {
         return axios.post<AuthResponse>("/authenticate", {
             username,
             password
+        }, {
+            signal: signal
         }).then(response => {
             localStorage.setItem(TOKEN_KEY, response.data.token)
             this.currentToken = response.data.token
@@ -67,55 +70,71 @@ class API {
         })
     }
 
-    createAccount = (username: string, password: string, userRole: UserRole) => {
+    createAccount = (username: string, password: string, userRole: UserRole, signal: AbortSignal|undefined = undefined) => {
         return axios.post<User>("/user", {
             username,
             password,
             userRole
+        }, {
+            signal: signal
         })
     }
 
-    currentUser = () => {
-        return axios.get<User>("/user")
+    currentUser = (signal: AbortSignal|undefined = undefined) => {
+        return axios.get<User>("/user", {
+            signal: signal
+        })
     }
 
-    createProduct = (name: string, cost: number, amountAvailable: number) => {
+    createProduct = (name: string, cost: number, amountAvailable: number, signal: AbortSignal|undefined = undefined) => {
         return axios.post<Product>("/product", {
             name,
             cost,
             amountAvailable
+        }, {
+            signal: signal
         })
     }
 
-    createOrUpdateProduct = (id: string, name?: string, cost?: number, amountAvailable?: number) => {
+    createOrUpdateProduct = (id: string, name?: string, cost?: number, amountAvailable?: number, signal: AbortSignal|undefined = undefined) => {
         return axios.put<Product>("/product/" + id, {
             name,
             cost,
             amountAvailable
+        }, {
+            signal: signal
         })
     }
 
-    fetchProducts = () => {
-        return axios.get<Array<Product>>("/product")
+    fetchProducts = (signal: AbortSignal|undefined = undefined) => {
+        return axios.get<Array<Product>>("/product", {
+            signal: signal
+        })
     }
 
-    deposit = (coins: number[]) => {
+    deposit = (coins: number[], signal: AbortSignal|undefined = undefined) => {
         return axios.post("/deposit", {
             coins
+        }, {
+            signal: signal
         })
     }
 
-    buy = (productId: string, productAmount: number) => {
+    buy = (productId: string, productAmount: number, signal: AbortSignal|undefined = undefined) => {
         return axios.post<BuyResponse>("/deposit", {
             productId, productAmount
+        }, {
+            signal: signal
         })
     }
 
-    reset = () => {
-        return axios.post("/reset")
+    reset = (signal: AbortSignal|undefined = undefined) => {
+        return axios.post("/reset", {}, {
+            signal: signal
+        })
     }
 
-    logout = () => {
+    logout = (signal: AbortSignal|undefined = undefined) => {
         console.log("Logging out")
 
         this.currentToken = null

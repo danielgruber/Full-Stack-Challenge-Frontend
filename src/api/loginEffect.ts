@@ -9,6 +9,8 @@ export function useIsLoggedIn() {
       console.log("Login Changed")
       setLoggedIn(commerceAPI.currentToken != null)
     }
+
+    return () => { commerceAPI.loginChange = undefined }
   }, []);
 
   return loggedIn;

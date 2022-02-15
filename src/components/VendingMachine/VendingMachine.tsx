@@ -13,19 +13,22 @@ function VendingMachine() {
   const [error, setError] = React.useState("")
 
   useEffect(() => {
+    const abortController = new AbortController()
     if (isLoggedIn) {
       setLoading(true)
 
-      commerceAPI.currentUser().then((user) => {
+      commerceAPI.currentUser(abortController.signal).then((user) => {
         setUser(user.data)
       })
 
-      commerceAPI.fetchProducts().then((products) => {
+      commerceAPI.fetchProducts(abortController.signal).then((products) => {
         setLoading(false)
 
         setProducts(products.data)
       })
     }
+
+    return () => abortController.abort()
   }, [isLoggedIn])
 
   const depositCoins = () => {
