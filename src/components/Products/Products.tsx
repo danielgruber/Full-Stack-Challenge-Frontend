@@ -14,9 +14,11 @@ function Products({ user }: { user: User|null }) {
     if (user && product.productName && product.cost && product.amountAvailable) {
       setError("")
       setSuccess("")
+      setLoading(true);
       
       commerceAPI.createProduct(product.productName, product.cost, product.amountAvailable).then( response => {
         setSuccess("Created product " + product.productName)
+        setLoading(false);
 
         setProduct({})
 
